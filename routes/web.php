@@ -1,17 +1,24 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TimelineController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\CollectionController;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return Inertia::render('Home');
+})->name('home');
+
+Route::get('/timeline', function () {
+    return Inertia::render('Timeline');
+})->name('timeline');
+
+// If you want to add API endpoints for the Met Museum (optional, for caching)
+Route::prefix('api')->group(function () {
+    Route::get('/artworks/period/{period}', [TimelineController::class, 'getByPeriod']);
+    Route::get('/artworks/{id}', [TimelineController::class, 'getById']);
 });
 
 Route::get('/dashboard', function () {
@@ -25,7 +32,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-Route::get('/', function () {
-    return inertia('Home');
-});

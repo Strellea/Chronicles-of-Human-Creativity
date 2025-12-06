@@ -1,10 +1,14 @@
 import React from "react";
-import ThreeBackground from "./ThreeBackground";  // ✅ IMPORTANT IMPORT
+import ThreeBackground from "./ThreeBackground";  
 import { motion, useViewportScroll, useTransform } from "framer-motion";
 
 export default function Hero({ onBegin }) {
   const { scrollY } = useViewportScroll();
   const bgY = useTransform(scrollY, [0, 300], [0, -120]);
+
+  // Fade out hero as user scrolls
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 300], [1, 0.95]);
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
@@ -14,11 +18,8 @@ export default function Hero({ onBegin }) {
         <ThreeBackground />
       </div>
 
-      {/* DARK OVERLAY (for readability) */}
-      <div className="absolute inset-0 bg-black/50 z-10" />
-
       {/* CONTENT */}
-      <div className="relative z-20 max-w-7xl mx-auto px-6 h-full flex items-center">
+      <div className="relative z-30 max-w-7xl mx-auto px-6 h-full flex items-center">
         {/* LEFT SIDE: TEXT */}
         <div className="w-1/2">
           
@@ -31,7 +32,7 @@ export default function Hero({ onBegin }) {
               hidden: {},
               visible: {
                 transition: {
-                  delayChildren: 0.8,
+                  delayChildren: 0.10,
                   staggerChildren: 0.09,   // speed of typing
                 },
               },
@@ -70,7 +71,7 @@ export default function Hero({ onBegin }) {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.3, delay: 2.2 }}  // wait for typing to finish
+            transition={{ duration: 1.3, delay: 2.4 }}  // wait for typing to finish
             className="mt-4 text-gray-200 text-lg"
           >
             A guided journey through the evolution of art.
@@ -81,9 +82,10 @@ export default function Hero({ onBegin }) {
             onClick={onBegin}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.3, delay: 2.2 }}
+            transition={{ duration: 1.3, delay: 2.6 }}
             whileHover={{ scale: 1.05 }}
-            className="mt-16 px-5 py-3 bg-white/10 border border-white/30 rounded-lg text-white backdrop-blur-sm"
+            whileTap={{ scale: 0.95 }}
+            className="mt-16 px-5 py-3 bg-white/10 border border-white/30 rounded-lg text-white backdrop-blur-sm hover:bg-white/20 transition-colors cursor-pointer pointer-events-auto relative z-50"
           >
             Begin the Journey
           </motion.button>
