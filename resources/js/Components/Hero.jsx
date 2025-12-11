@@ -1,5 +1,5 @@
 import React from "react";
-import ThreeBackground from "./ThreeBackground";  
+// import ThreeBackground from "./ThreeBackground";  
 import { motion, useViewportScroll, useTransform } from "framer-motion";
 
 export default function Hero({ onBegin }) {
@@ -13,10 +13,10 @@ export default function Hero({ onBegin }) {
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
 
-      {/* 3D BACKGROUND */}
+      {/* 3D BACKGROUND
       <div className="absolute inset-0 z-0">
         <ThreeBackground />
-      </div>
+      </div> */}
 
       {/* CONTENT */}
       <div className="relative z-30 max-w-7xl mx-auto px-6 h-full flex items-center">
