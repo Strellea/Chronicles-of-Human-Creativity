@@ -39,18 +39,23 @@ export default function ImmersiveScrollStory({ periods, artworksData, onArtworkC
         const sectionHeight = rect.height;
         const viewportHeight = window.innerHeight;
         
-        const titleThreshold = sectionHeight * 0.15;
-        
-        if (sectionTop <= viewportHeight * 0.5 && sectionTop + titleThreshold > 0) {
-          const periodId = section.getAttribute('data-period-id');
-          const period = periods.find(p => p.id === periodId);
-          
-          if (period && !activeFound) {
-            setCurrentChapter(index + 1);
-            setCurrentPeriod(period);
-            activeFound = true;
+        const viewCenter = viewportHeight / 2;
+
+        sections.forEach((section, index) => {
+          const rect = section.getBoundingClientRect();
+
+          // Condition: section that covers viewport center becomes "active"
+          if (rect.top <= viewCenter && rect.bottom >= viewCenter) {
+            const periodId = section.getAttribute("data-period-id");
+            const period = periods.find((p) => p.id === periodId);
+
+            if (period && !activeFound) {
+              setCurrentChapter(index + 1);
+              setCurrentPeriod(period);
+              activeFound = true;
+            }
           }
-        }
+        });
       });
       
       if (!activeFound && progress < 0.1) {
@@ -71,7 +76,13 @@ export default function ImmersiveScrollStory({ periods, artworksData, onArtworkC
   }, [periods]);
 
   return (
+    
     <div ref={containerRef} className="relative bg-black">
+
+       {/* 3D BACKGROUND */}
+          <div className="absolute inset-0 z-0">
+            <ThreeBackground />
+          </div> 
       <AnimatePresence>
         {showIntro && (
           <motion.div
@@ -80,6 +91,7 @@ export default function ImmersiveScrollStory({ periods, artworksData, onArtworkC
             transition={{ duration: 1 }}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
           >
+
             <div className="text-center">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
@@ -150,7 +162,6 @@ export default function ImmersiveScrollStory({ periods, artworksData, onArtworkC
 
       {!showIntro && (
         <>
-          <ThreeBackground />
           <OpeningScene scrollProgress={scrollProgress} />
 
           {periods.map((period, index) => {
